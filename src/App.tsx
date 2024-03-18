@@ -24,6 +24,9 @@ function App() {
       const data = await response.json()
       setData(data.data)
       setCount(data.total_pages)
+      const newUrl = productId ? `${window.location.origin}${window.location.pathname}?page=${page}&id=${productId}` : `${window.location.origin}${window.location.pathname}?page=${page}`;
+      window.history.replaceState(null, '', newUrl);
+
     } catch (error) {
       console.error('Błąd podczas pobierania danych:', error)
     } finally {
