@@ -18,17 +18,16 @@ function App() {
   const [page, setPage] = useState<number>(1)
   const [isLoader, setIsLoader] = useState<boolean>(false)
   const [modalData, setModalData] = useState<Product | null>(null)
-  const [productId, setProductId] = useState<number | null>(Number(new URLSearchParams(window.location.search).get('id')) ? Number(new URLSearchParams(window.location.search).get('page')) : null)
 
   const fetchElements = async (page: number, id?: number) => {
     setIsLoader(true)
-    const newUrl = productId ? `${window.location.origin}${window.location.pathname}?page=${page}&id=${productId}` : `${window.location.origin}${window.location.pathname}?page=${page}`;
+    const newUrl = id ? `${window.location.origin}${window.location.pathname}?page=${page}&id=${id}` : `${window.location.origin}${window.location.pathname}?page=${page}`;
     window.history.replaceState(null, '', newUrl);
     try {
-      let url = productId != null ? `https://reqres.in/api/products?page=${page}&id=${id}` : `https://reqres.in/api/products?page=${page}`
+      let url = id != null ? `https://reqres.in/api/products?page=${page}&id=${id}` : `https://reqres.in/api/products?page=${page}`
       const response = await fetch(url);
       const data = await response.json()
-      productId ? setData([data.data]) : setData(data.data)
+      id ? setData([data.data]) : setData(data.data)
       setPaginationCount(data.total_pages)
       toast.success("Wow so easy!")
     } catch (error) {
@@ -42,7 +41,9 @@ function App() {
   }
 
   useEffect(() => {
-    fetchElements(Number(new URLSearchParams(window.location.search).get('page')) ? Number(new URLSearchParams(window.location.search).get('page')) : 1)
+    const id = Number(new URLSearchParams(window.location.search).get('id'))
+    const page = Number(new URLSearchParams(window.location.search).get('page'))
+    id != 0 ? fetchElements(page != 0 ? page : 1, id) : fetchElements(page != 0 ? page : 1)
   }, [])
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -62,14 +63,9 @@ function App() {
 
 
   const filterData = debounce((id: number) => {
-    setProductId(id);
+    fetchElements(page, id)
   }, 1000);
 
-  useEffect(() => {
-    if (productId > 0) {
-      fetchElements(page, productId);
-    }
-  }, [productId]);
 
   return (
     <div className='bg-gray-200 min-h-screen flex flex-col gap-6 p-6'>

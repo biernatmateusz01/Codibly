@@ -16,28 +16,34 @@ export function BaseTable({ data, onClick }) {
                 <TableHead>
                     <TableRow>
                         <TableCell>Id</TableCell>
-                        <TableCell >Name</TableCell>
+                        <TableCell>Name</TableCell>
                         <TableCell align='right'>Year</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data?.map((row: Product) => (
-                        <TableRow
-                            onClick={() => {
-                                onClick(row)
-                            }}
-                            key={row.name}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            style={{
-                                backgroundColor: row.color,
-                                cursor: 'pointer'
-                            }}
-                        >
-                            <TableCell >{row.id}</TableCell>
-                            <TableCell >{row.name}</TableCell>
-                            <TableCell align='right'>{row.year}</TableCell>
-                        </TableRow>
-                    ))}
+                    {data?.map((row: Product) => {
+                        if (row.id !== undefined && row.name !== undefined && row.year !== undefined) {
+                            return (
+                                <TableRow
+                                    onClick={() => {
+                                        onClick(row);
+                                    }}
+                                    key={row.name}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    style={{
+                                        backgroundColor: row.color,
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    <TableCell>{row.id}</TableCell>
+                                    <TableCell>{row.name}</TableCell>
+                                    <TableCell align='right'>{row.year}</TableCell>
+                                </TableRow>
+                            );
+                        } else {
+                            return null;
+                        }
+                    })}
                 </TableBody>
             </Table>
         </TableContainer>
