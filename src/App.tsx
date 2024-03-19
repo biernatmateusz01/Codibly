@@ -1,41 +1,48 @@
-import { useState, useEffect } from 'react'
 import './index.css'
+import { useState, useEffect } from 'react'
 import { BaseModal } from './components/BaseModal'
 import { BaseTable } from './components/BaseTable'
+import { BaseLoader } from './components/BaseLoader'
 import { Product } from './types'
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import _ from 'lodash';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import debounce from 'lodash/debounce';
 
 function App() {
   const [showedModal, setShowedModal] = useState<boolean>(false)
   const [data, setData] = useState<Product[] | null>(null)
-  const [count, setCount] = useState<number>(0)
+  const [paginationCount, setPaginationCount] = useState<number>(0)
   const [page, setPage] = useState<number>(1)
+  const [isLoader, setIsLoader] = useState<boolean>(false)
   const [modalData, setModalData] = useState<Product | null>(null)
-  const [productId, setProductId] = useState<number | null>(null)
+  const [productId, setProductId] = useState<number | null>(Number(new URLSearchParams(window.location.search).get('id')) ? Number(new URLSearchParams(window.location.search).get('page')) : null)
 
   const fetchElements = async (page: number, id?: number) => {
+    setIsLoader(true)
+    const newUrl = productId ? `${window.location.origin}${window.location.pathname}?page=${page}&id=${productId}` : `${window.location.origin}${window.location.pathname}?page=${page}`;
+    window.history.replaceState(null, '', newUrl);
     try {
-      let url = productId ? `https://reqres.in/api/products?page=${page}&id=${id}` : `https://reqres.in/api/products?page=${page}`
-
+      let url = productId != null ? `https://reqres.in/api/products?page=${page}&id=${id}` : `https://reqres.in/api/products?page=${page}`
       const response = await fetch(url);
       const data = await response.json()
-      setData(data.data)
-      setCount(data.total_pages)
-      const newUrl = productId ? `${window.location.origin}${window.location.pathname}?page=${page}&id=${productId}` : `${window.location.origin}${window.location.pathname}?page=${page}`;
-      window.history.replaceState(null, '', newUrl);
-
+      productId ? setData([data.data]) : setData(data.data)
+      setPaginationCount(data.total_pages)
+      toast.success("Wow so easy!")
     } catch (error) {
-      console.error('Błąd podczas pobierania danych:', error)
+      toast.error('Something went wrong :(', {
+        position: "top-right",
+        autoClose: 5000,
+      });
     } finally {
-      console.log('finalyy')
+      setIsLoader(false)
     }
   }
 
   useEffect(() => {
-    fetchElements(1)
+    fetchElements(Number(new URLSearchParams(window.location.search).get('page')) ? Number(new URLSearchParams(window.location.search).get('page')) : 1)
   }, [])
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -53,25 +60,30 @@ function App() {
     setShowedModal(false)
   }
 
-  const filterData = _.debounce((id: number) => {
-    setProductId(id)
-    fetchElements(page, id)
 
+  const filterData = debounce((id: number) => {
+    setProductId(id);
   }, 1000);
 
+  useEffect(() => {
+    if (productId > 0) {
+      fetchElements(page, productId);
+    }
+  }, [productId]);
+
   return (
-    <>
-      <div className='bg-gray-200 min-h-screen flex flex-col gap-6 p-6'>
-        {showedModal && <BaseModal modalData={modalData} closeModal={closeModal} />}
-        <TextField id="outlined-basic" label="Outlined" variant="outlined" type='number' onInput={() => {filterData(event?.target.value)}} />
-        <BaseTable data={data} onClick={onClick} />
-        <div className='block ml-auto'>
-          <Stack spacing={2}>
-            <Pagination count={count} variant="outlined" shape="rounded" onChange={handleChange} />
-          </Stack>
-        </div>
+    <div className='bg-gray-200 min-h-screen flex flex-col gap-6 p-6'>
+      <ToastContainer />
+      {isLoader && <BaseLoader />}
+      {showedModal && <BaseModal modalData={modalData} closeModal={closeModal} />}
+      <TextField id="outlined-basic" label="Outlined" variant="outlined" type='number' onInput={() => { filterData(event?.target.value) }} />
+      <BaseTable data={data} onClick={onClick} />
+      <div className='block ml-auto'>
+        <Stack spacing={2}>
+          <Pagination count={paginationCount} variant="outlined" shape="rounded" onChange={handleChange} />
+        </Stack>
       </div>
-    </>
+    </div>
   )
 }
 

@@ -1,4 +1,4 @@
-export interface Support{
+export interface Support {
     url: string,
     text: string
 }
@@ -11,7 +11,7 @@ export interface Product {
     pantone_value: string,
 }
 
-export interface PaginationProps{
+export interface PaginationProps {
     count: number,
     handleChangePage: void
 }

@@ -9,6 +9,7 @@ import { Product } from '../types';
 
 
 export function BaseTable({ data, onClick }) {
+    console.log(data)
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
