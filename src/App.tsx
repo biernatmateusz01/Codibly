@@ -27,7 +27,9 @@ function App() {
       let url = id != null ? `https://reqres.in/api/products?page=${page}&id=${id}` : `https://reqres.in/api/products?page=${page}`
       const response = await fetch(url);
       const data = await response.json()
-      id ? setData([data.data]) : setData(data.data)
+      if(data.data){
+        id ? setData([data.data]) : setData(data.data)
+      }
       setPaginationCount(data.total_pages)
       toast.success("Wow so easy!")
     } catch (error) {
