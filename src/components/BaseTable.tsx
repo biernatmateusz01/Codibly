@@ -6,13 +6,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { BaseModal } from './BaseModal'
-import { Product, UserContexType } from '../types';
+import { Product } from '../types';
 import { useContext } from 'react'
 import { UserContext } from '../App'
 import { useState } from 'react';
 
 export function BaseTable() {
-    const { data } = useContext<UserContexType>(UserContext);
+    const { data } = useContext<Product[]>(UserContext);
     const [showedModal, setShowedModal] = useState<boolean>(false)
     const [modalData, setModalData] = useState<null | Product>(null)
 
@@ -30,7 +30,7 @@ export function BaseTable() {
         <>
             {showedModal && <BaseModal modalData={modalData} closeModal={closeModal} />}
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table sx={{ minWidth: 650 }} aria-label="siemple table">
                     <TableHead>
                         <TableRow>
                             <TableCell>Id</TableCell>
