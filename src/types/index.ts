@@ -1,8 +1,3 @@
-export interface Support {
-    url: string,
-    text: string
-}
-
 export interface Product {
     id: number,
     name: string,
@@ -16,3 +11,16 @@ export interface PaginationProps {
     handleChangePage: void
 }
 
+export interface ModalProps {
+    modalData: Product,
+    closeModal: React.MouseEventHandler<HTMLButtonElement>
+}
+
+export interface UserContexType {
+    data?: Product[],
+    paginationCount?: number,
+    isLoader?: boolean,
+    modalData?: Product,
+    handleChange?: void,
+    filterData?: void
+}

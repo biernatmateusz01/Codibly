@@ -7,7 +7,6 @@ import debounce from 'lodash/debounce';
 export const UserContext = createContext()
 
 function App() {
-  const [showedModal, setShowedModal] = useState<boolean>(false)
   const [data, setData] = useState<Product[] | null>(null)
   const [paginationCount, setPaginationCount] = useState<number>(0)
   const [page, setPage] = useState<number>(1)
@@ -55,21 +54,11 @@ function App() {
     fetchElements(value)
   };
 
-
-  const openModal = (row: Product) => {
-    setModalData(row)
-    setShowedModal(true)
-  }
-
-  const closeModal = () => {
-    setShowedModal(false)
-  }
-
   const filterData = debounce((id: number) => {
     fetchElements(page, id)
   }, 1000);
 
-  const context = { showedModal, data, paginationCount, isLoader, modalData, handleChange, openModal, filterData, closeModal }
+  const context = { data, paginationCount, isLoader, modalData, handleChange, filterData }
 
   return (
     <UserContext.Provider value={context}>

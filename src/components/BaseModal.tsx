@@ -1,9 +1,6 @@
-import { useContext } from 'react'
-import { UserContext } from '../App'
+import { ModalProps } from "../types";
 
-export function BaseModal() {
-    const { modalData, closeModal } = useContext(UserContext);
-
+export function BaseModal({modalData, closeModal}: ModalProps) {
     const { color, id, name, pantone_value, year } = modalData
     return (
         <div className="h-screen w-screen bg-black bg-opacity-95 flex items-center justify-center fixed top-0 left-0 z-50 text-red-300">
