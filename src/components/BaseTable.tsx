@@ -6,10 +6,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Product } from '../types';
+import { useContext } from 'react'
+import { UserContext } from '../App'
 
+export function BaseTable() {
+    const { data, onClick } = useContext(UserContext);
 
-export function BaseTable({ data, onClick }) {
-    console.log(data)
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
