@@ -20,7 +20,6 @@ export interface UserContexType {
     data?: Product[],
     paginationCount?: number,
     isLoader?: boolean,
-    modalData?: Product,
     handleChange?: void,
     filterData?: void
 }

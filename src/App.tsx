@@ -5,20 +5,18 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import debounce from 'lodash/debounce';
 export const UserContext = createContext()
+import { updateUrl } from '../src/utils/updateUrl';
+
 
 function App() {
   const [data, setData] = useState<Product[] | null>(null)
   const [paginationCount, setPaginationCount] = useState<number>(0)
   const [page, setPage] = useState<number>(1)
   const [isLoader, setIsLoader] = useState<boolean>(false)
-  const [modalData, setModalData] = useState<Product | null>(null)
-
 
   const fetchElements = async (page: number, id?: number) => {
-    const newUrl = id ? `${window.location.origin}${window.location.pathname}?page=${page}&id=${id}` : `${window.location.origin}${window.location.pathname}?page=${page}`;
-    window.history.replaceState(null, '', newUrl);
+    updateUrl(page, id)
     setIsLoader(true);
-
     try {
       let url = `https://reqres.in/api/products?page=${page}&per_page=5`;
       if (id != null) {
@@ -58,7 +56,7 @@ function App() {
     fetchElements(page, id)
   }, 1000);
 
-  const context = { data, paginationCount, isLoader, modalData, handleChange, filterData }
+  const context = { data, paginationCount, isLoader, handleChange, filterData }
 
   return (
     <UserContext.Provider value={context}>
