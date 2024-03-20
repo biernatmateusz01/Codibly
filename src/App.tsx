@@ -21,7 +21,7 @@ function App() {
     setIsLoader(true);
 
     try {
-      let url = `https://reqres.in/api/products?page=${page}`;
+      let url = `https://reqres.in/api/products?page=${page}&per_page=5`;
       if (id != null) {
         url += `&id=${id}`;
       }
@@ -45,9 +45,9 @@ function App() {
   };
 
   useEffect(() => {
-    const id = Number(new URLSearchParams(window.location.search).get('id'))
+    const id = new URLSearchParams(window.location.search).get('id')
     const page = Number(new URLSearchParams(window.location.search).get('page'))
-    id != 0 ? fetchElements(page != 0 ? page : 1, id) : fetchElements(page != 0 ? page : 1)
+    id  ? fetchElements(page != 0 ? page : 1, Number(id)) : fetchElements(page != 0 ? page : 1)
   }, [])
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -56,7 +56,7 @@ function App() {
   };
 
 
-  const onClick = (row: Product) => {
+  const openModal = (row: Product) => {
     setModalData(row)
     setShowedModal(true)
   }
@@ -69,7 +69,7 @@ function App() {
     fetchElements(page, id)
   }, 1000);
 
-  const context = { showedModal, data, paginationCount, isLoader, modalData, handleChange, onClick, filterData, closeModal }
+  const context = { showedModal, data, paginationCount, isLoader, modalData, handleChange, openModal, filterData, closeModal }
 
   return (
     <UserContext.Provider value={context}>

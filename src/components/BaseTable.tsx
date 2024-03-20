@@ -10,7 +10,7 @@ import { useContext } from 'react'
 import { UserContext } from '../App'
 
 export function BaseTable() {
-    const { data, onClick } = useContext(UserContext);
+    const { data, openModal } = useContext(UserContext);
 
     return (
         <TableContainer component={Paper}>
@@ -28,7 +28,7 @@ export function BaseTable() {
                             return (
                                 <TableRow
                                     onClick={() => {
-                                        onClick(row);
+                                        openModal(row);
                                     }}
                                     key={row.name}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
