@@ -16,10 +16,12 @@ export interface ModalProps {
     closeModal: React.MouseEventHandler<HTMLButtonElement>
 }
 
-export interface UserContexType {
-    data?: Product[],
-    paginationCount?: number,
-    isLoader?: boolean,
-    handleChange?: void,
-    filterData?: void
+export interface DataContextType {
+    value: string,
+    isLoader: boolean,
+    currentPage: number,
+    paginationCount: number,
+    data: Product[];
+    handleValueChange: (event: React.FormEvent<HTMLDivElement>) => void
+    handleCurrentPageChange: (value: number) => void,
 }
